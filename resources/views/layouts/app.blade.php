@@ -9,7 +9,6 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="font-sans antialiased bg-gradient-to-br from-slate-950 via-emerald-950 to-slate-950 min-h-screen text-slate-100" 
@@ -49,6 +48,13 @@
                         <i class="fa-solid fa-calendar-days text-sm shrink-0 group-hover:scale-110 transition"></i>
                         <span x-show="sidebarOpen" class="text-xs font-bold uppercase tracking-wider">Jadwal & SOP</span>
                     </a>
+
+                    <a href="{{ route('device.setting') }}" 
+                    class="{{ request()->routeIs('device.setting') ? 'bg-gradient-to-r from-emerald-500/20 to-teal-500/10 border-emerald-500/40 text-emerald-400' : 'border-transparent text-slate-400 hover:bg-white/5 hover:text-slate-200' }} flex items-center gap-4 px-4 py-3 rounded-xl border transition duration-200 group">
+                        <i class="fa-solid fa-sliders text-sm shrink-0 group-hover:scale-110 transition"></i>
+                        <span x-show="sidebarOpen" class="text-xs font-bold uppercase tracking-wider">Pengaturan Alat</span>
+                    </a>
+
                 </nav>
             </div>
 

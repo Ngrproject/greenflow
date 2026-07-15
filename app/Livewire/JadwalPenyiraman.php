@@ -1,7 +1,5 @@
 <?php
 
-namespace App\App\Livewire;
-
 namespace App\Livewire;
 
 use Livewire\Component;
@@ -11,33 +9,34 @@ use Carbon\Carbon;
 
 class JadwalPenyiraman extends Component
 {
+    // Properti Form Jadwal
     public $hst_mulai, $hst_selesai, $target_ml, $waktu_siram;
     public $jadwals;
+
+    // Properti Form Tanggal Tanam (Membaca ke tabel device_settings)
     public $tanggal_tanam;
-    public $hst_berjalan = 0; // Variabel baru untuk menampung HST Berjalan
+    public $hst_berjalan = 0; 
 
     public function mount()
     {
         $this->loadData();
     }
 
-public function loadData()
+    public function loadData()
     {
-        // 1. Ambil seluruh daftar jadwal penyiraman diurutkan dari HST terkecil
+        // 1. Ambil data matriks dari tabel watering_schedules
         $this->jadwals = WateringSchedule::orderBy('hst_mulai')->get();
 
-        // 2. Ambil data pengaturan alat untuk tanggal tanam terbaru
-        $setting = DeviceSetting::latest()->first();
+        // 2. Ambil data tanggal tanam dari rekor pertama tabel device_settings
+        $setting = DeviceSetting::first();
         
         if ($setting) {
             $this->tanggal_tanam = $setting->tanggal_tanam;
             
-            // 3. Hitung Hari Setelah Tanam (HST) Berjalan secara otomatis
+            // 3. Hitung Hari Setelah Tanam (HST) Berjalan jika ada datanya
             if ($setting->tanggal_tanam) {
                 $tglTanam = Carbon::parse($setting->tanggal_tanam);
-                $hariIni = Carbon::now('Asia/Jakarta'); // Kunci di zona waktu lokal
-                
-                // PERBAIKAN: Gunakan floor() untuk membuang angka desimal di belakang koma
+                $hariIni = Carbon::now('Asia/Jakarta'); 
                 $this->hst_berjalan = (int) max(1, floor($tglTanam->diffInDays($hariIni)) + 1);
             }
         }
@@ -49,12 +48,13 @@ public function loadData()
             'hst_mulai'   => 'required|numeric',
             'hst_selesai' => 'required|numeric',
             'target_ml'   => 'required|numeric',
-            'waktu_siram' => 'required|string', // Contoh input: 07:00, 10:00, 13:00
+            'waktu_siram' => 'required|string', 
         ]);
 
-        // Mengubah inputan teks (koma) menjadi format Array untuk disimpan ke JSON
+        // Mengonversi string pisahan koma menjadi array JSON untuk tabel watering_schedules
         $jamArray = array_map('trim', explode(',', $this->waktu_siram));
 
+        // MURNI MENEMBAK KE TABEL watering_schedules (Bebas dari kolom tanggal_tanam)
         WateringSchedule::create([
             'hst_mulai'   => $this->hst_mulai,
             'hst_selesai' => $this->hst_selesai,
@@ -76,14 +76,14 @@ public function loadData()
 
     public function simpanTanggalTanam()
     {
-        // Menggunakan updateOrCreate agar selalu mengunci rekor pengaturan terbaru alat
+        // MURNI MENEMBAK KE TABEL device_settings mengunci ID = 1 sesuai phpMyAdmin
         $setting = DeviceSetting::firstOrCreate(['id' => 1]);
-        $setting->tanggal_tanam = $this->tanggal_tanam;
-        $setting->save();
+        $setting->update([
+            'tanggal_tanam' => $this->tanggal_tanam
+        ]);
         
-        $this->loadData(); // Reload data untuk langsung menghitung ulang HST Berjalan
-        
-        session()->flash('pesan_tanam', 'Tanggal tanam berhasil disimpan!');
+        $this->loadData(); 
+        session()->flash('pesan_tanam', 'Tanggal tanam berhasil disinkronkan!');
     }
 
     public function render()

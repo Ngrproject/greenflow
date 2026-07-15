@@ -26,4 +26,9 @@ Route::get('/analisis', [AnalisisController::class, 'index'])->middleware(['auth
 Route::get('/analisis/export', [AnalisisController::class, 'downloadExcel'])->middleware(['auth', 'verified'])->name('analisis.export');
 Route::get('/analisis/data', [AnalisisController::class, 'getFilteredData'])->middleware(['auth', 'verified'])->name('analisis.data');
 
+use App\Livewire\DeviceSetting;
+
+// Tambahkan di dalam grup routing aplikasi kamu
+Route::get('/pengaturan-alat', DeviceSetting::class)->name('device.setting');
+
 require __DIR__.'/auth.php';

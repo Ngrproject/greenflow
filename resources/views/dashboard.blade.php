@@ -176,19 +176,85 @@
                     </div>
                 </div>
 
-                <div class="backdrop-blur-md bg-white/5 border border-white/10 rounded-3xl p-6 shadow-2xl flex flex-col justify-between">
-                    <div>
-                        <h3 class="text-sm font-bold text-white tracking-wide uppercase flex items-center gap-2">
-                            <span>📊</span> Log Histori & Analisis Grafik
-                        </h3>
-                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">Untuk memetakan pola pergerakan data time series per menit, 10 menit, hingga bulanan secara interaktif dengan visualisasi diagram penuh animasi, klik tautan di bawah ini.</p>
+                <div class="backdrop-blur-xl bg-slate-900/40 border border-white/10 rounded-3xl p-6 shadow-2xl flex flex-col justify-between h-full">
+    <!-- Header Card -->
+                <div class="flex justify-between items-center border-b border-white/5 pb-3 mb-6">
+                    <h4 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                        <span>⚡</span> Aliran Distribusi Daya Utama (Real-Time)
+                    </h4>
+                    <!-- Indikator Status Sumber Aktif Dinamis -->
+                    <span class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wide
+                        @if(($sumberDayaAktif ?? 'plts') == 'plts') bg-emerald-500/10 text-emerald-400 border border-emerald-500/20
+                        @elseif(($sumberDayaAktif ?? 'plts') == 'baterai') bg-blue-500/10 text-blue-400 border border-blue-500/20
+                        @else bg-amber-500/10 text-amber-400 border border-amber-500/20 @endif">
+                        <!-- Menggunakan strtoupper bawaan PHP yang aman -->
+                        Sumber: {{ strtoupper($sumberDayaAktif ?? 'PLTS') }}
+                    </span>
+                </div>
+
+                <!-- Area Animasi Flow Energi Hybrid -->
+                <div class="flex items-center justify-around py-6 bg-slate-950/40 rounded-2xl border border-white/5 relative overflow-hidden my-auto">
+                    
+                    <!-- KOLOM 1: SUMBER ENERGI (Dinamis Berdasarkan Variabel) -->
+                    <div class="flex flex-col items-center gap-2 z-10 w-24 text-center">
+                        @if(($sumberDayaAktif ?? 'plts') == 'plts')
+                            <div class="w-14 h-14 rounded-full bg-emerald-500/20 border-2 border-emerald-400 flex items-center justify-center text-emerald-400 shadow-lg shadow-emerald-500/20 animate-bounce">
+                                <i class="fa-solid fa-solar-panel text-2xl"></i>
+                            </div>
+                            <span class="text-[11px] font-bold text-slate-200 tracking-wide">Panel Surya</span>
+                        @elseif(($sumberDayaAktif ?? 'plts') == 'baterai')
+                            <div class="w-14 h-14 rounded-full bg-blue-500/20 border-2 border-blue-400 flex items-center justify-center text-blue-400 shadow-lg shadow-blue-500/20 animate-pulse">
+                                <i class="fa-solid fa-battery-three-quarters text-2xl"></i>
+                            </div>
+                            <span class="text-[11px] font-bold text-slate-200 tracking-wide">Energi Baterai</span>
+                        @else
+                            <div class="w-14 h-14 rounded-full bg-amber-500/20 border-2 border-amber-400 flex items-center justify-center text-amber-400 shadow-lg shadow-amber-500/20 animate-pulse">
+                                <i class="fa-solid fa-plug text-2xl"></i>
+                            </div>
+                            <span class="text-[11px] font-bold text-slate-200 tracking-wide">Jaringan PLN</span>
+                        @endif
                     </div>
-                    <div class="mt-4">
-                        <a href="{{ route('analisis') }}" class="w-full inline-flex justify-center items-center px-5 py-3 text-xs font-bold uppercase text-slate-950 bg-gradient-to-r from-emerald-400 to-teal-400 hover:from-emerald-500 hover:to-teal-500 transition-all duration-300 rounded-xl shadow-xl hover:shadow-emerald-500/10 active:scale-95">
-                            Buka Halaman Analisis & Grafik Runtun Waktu →
-                        </a>
+
+                    <!-- LINE ANIMASI 1 (Sumber -> Sistem) -->
+                    <div class="flex-1 flex justify-center items-center relative px-2">
+                        <div class="w-full h-1 bg-slate-800 rounded-full relative overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-400 to-transparent w-1/2 animate-[ping_2s_infinite] rounded-full"></div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-[10px] text-emerald-400/60 absolute right-2 animate-pulse"></i>
+                    </div>
+
+                    <!-- KOLOM 2: SISTEM KENDALI UTAMA -->
+                    <div class="flex flex-col items-center gap-2 z-10 w-24 text-center">
+                        <div class="w-14 h-14 rounded-full bg-slate-900 border-2 border-white/10 flex items-center justify-center text-slate-300 shadow-md">
+                            <i class="fa-solid fa-microchip text-2xl text-teal-400"></i>
+                        </div>
+                        <span class="text-[11px] font-bold text-slate-300 tracking-wide">Sistem ESP32</span>
+                    </div>
+
+                    <!-- LINE ANIMASI 2 (Sistem -> Greenhouse) -->
+                    <div class="flex-1 flex justify-center items-center relative px-2">
+                        <div class="w-full h-1 bg-slate-800 rounded-full relative overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-400 to-transparent w-1/2 animate-[ping_2s_infinite] rounded-full"></div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-[10px] text-emerald-400/60 absolute right-2 animate-pulse"></i>
+                    </div>
+
+                    <!-- KOLOM 3: GREENHOUSE TARGET -->
+                    <div class="flex flex-col items-center gap-2 z-10 w-24 text-center">
+                        <div class="w-14 h-14 rounded-full bg-emerald-950/40 border-2 border-emerald-500/40 flex items-center justify-center text-emerald-400 shadow-inner">
+                            <i class="fa-solid fa-house-chimney-window text-2xl animate-pulse"></i>
+                        </div>
+                        <span class="text-[11px] font-bold text-emerald-400 tracking-wide">Greenhouse</span>
                     </div>
                 </div>
+
+                <!-- Navigasi Cepat (Tombol Dialihkan ke Bagian Bawah Card) -->
+                <div class="mt-6">
+                    <a href="{{ route('analisis') }}" class="w-full inline-flex justify-center items-center px-4 py-3 text-xs font-bold uppercase text-slate-950 bg-gradient-to-r from-emerald-400 to-teal-400 hover:from-emerald-500 hover:to-teal-500 transition-all duration-300 rounded-xl shadow-lg hover:shadow-emerald-500/10 active:scale-95">
+                        Buka Analisis Grafik Runtun Waktu &rarr;
+                    </a>
+                </div>
+            </div>
             </div>
 
         </div>
