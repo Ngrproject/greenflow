@@ -57,6 +57,14 @@
                         <span x-show="sidebarOpen" class="text-xs font-bold uppercase tracking-wider">Jadwal & SOP</span>
                     </a>
 
+<!-- TAMBAHAN MENU PAGE BARU NOTIFIKASI -->
+                    <a href="/notifikasi" 
+                       :style="request()->is('notifikasi*') && tema === 'light' ? 'background: #f1f5f9 !important; border-color: #cbd5e1 !important; color: #0284c7 !important;' : ''"
+                       class="{{ request()->is('notifikasi*') ? 'dark:bg-sky-500/20 text-sky-600 dark:text-sky-400 dark:border-sky-500/40' : 'border-transparent text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-slate-200' }} flex items-center gap-4 px-4 py-3 rounded-xl border transition duration-200 group">
+                        <i class="fa-regular fa-bell text-sm shrink-0 group-hover:scale-110 transition"></i>
+                        <span x-show="sidebarOpen" class="text-xs font-bold uppercase tracking-wider">Notifikasi</span>
+                    </a>
+
                     <a href="{{ route('device.setting') }}" 
                        :style="request()->routeIs('device.setting') && tema === 'light' ? 'background: #f1f5f9 !important; border-color: #cbd5e1 !important; color: #059669 !important;' : ''"
                        class="{{ request()->routeIs('device.setting') ? 'dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 dark:border-emerald-500/40' : 'border-transparent text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-slate-200' }} flex items-center gap-4 px-4 py-3 rounded-xl border transition duration-200 group">
