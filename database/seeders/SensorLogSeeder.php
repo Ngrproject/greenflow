@@ -6,7 +6,7 @@ use Illuminate\Database\Seeder;
 use App\Models\SensorLog;
 use Carbon\Carbon;
 
-class SensorLog100MinutSeeder extends Seeder
+class SensorLogSeeder extends Seeder
 {
     public function run(): void
     {

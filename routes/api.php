@@ -1,16 +1,21 @@
 <?php
 
+use App\Models\SystemLog;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\GreenhouseController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-*/
+Route::post('/send-log', function (Request $request) {
+    // Validasi data kiriman dari ESP32
+    $validated = $request->validate([
+        'type' => 'required|string',
+        'message' => 'required|string',
+    ]);
 
-// Endpoint untuk ESP32 mengambil konfigurasi alat & jadwal penyiraman
-Route::get('/greenhouse/config', [GreenhouseController::class, 'getConfig']);
+    // Simpan langsung ke database web
+    SystemLog::create([
+        'type' => $validated['type'],
+        'message' => $validated['message']
+    ]);
 
-// Endpoint untuk ESP32 mengirim log data sensor lengkap
-Route::post('/greenhouse/log', [GreenhouseController::class, 'storeLog']);
+    return response()->json(['status' => 'success', 'message' => 'Log berhasil disimpan di web!'], 200);
+});
